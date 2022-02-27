@@ -1,20 +1,47 @@
-const loadData = async () => {
+const loadCatagories = async () => {
 
-    const url = 'https://fakestoreapi.com/products?fbclid=IwAR18RyTA2AaLhdBU__kyoz7TORAMs265eFSuhVbFT7iVgdTzVOUlKsGNuxg';
+    const url = 'https://fakestoreapi.com/products/categories';
 
     const res = await fetch(url);
     const data = await res.json();
-
-    displayProduct(data);
+    clearContainer();
+    console.log(data)
+    data.forEach(catagory => {
+        
+        loadData(catagory);
+        
+        createCategoryMenu(catagory);
+    });
 
 }
-loadData();
+loadCatagories();
 
-const displayProduct = (products) => {
+const loadData =async (catagory) =>{
+    
+    const url = `https://fakestoreapi.com/products/category/${catagory}`;
+
+    const res = await fetch(url);
+    const data = await res.json();
+    displayData(catagory,data);
+
+}
+
+const clearContainer = ()=>{
     const productContainer = document.getElementById('product-container');
+    productContainer.textContent='';
+}
+
+const displayData = (catagory,products) => {
+    const productContainer = document.getElementById('product-container');
+    const categoryTitle = document.createElement('h2');
+    categoryTitle.classList.add("text-center");
+    categoryTitle.innerText=catagory;
+    productContainer.appendChild(categoryTitle)
+    const categoryProduct = document.createElement('div');
+    categoryProduct.classList.add("row", "row-cols-1", "row-cols-md-3", "g-4");
 
     products.forEach(product => {
-        console.log(product)
+        // console.log(product)
         const div = document.createElement('div');
         div.classList.add('col');
         div.innerHTML = `
@@ -36,6 +63,27 @@ const displayProduct = (products) => {
                       </div>
         `
 
-        productContainer.appendChild(div);
+        categoryProduct.appendChild(div);
     });
+    
+    productContainer.appendChild(categoryProduct);
+}
+
+const createCategoryMenu =(category)=>{
+    const categoryMenu = document.getElementById('category-dropdown');
+    
+    const li= document.createElement('li');
+
+    li.innerHTML=`
+    <a class="dropdown-item" onclick='categoryDataLoad("${category.replace("'","*")}")'>${category}</a>
+    `;
+    console.log(category)
+    categoryMenu.appendChild(li);
+
+}
+
+const categoryDataLoad=(category) =>{
+    console.log(category)
+    clearContainer();
+    loadData(category.replace("*","'"))
 }
