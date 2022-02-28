@@ -58,7 +58,7 @@ const displayData = (catagory,products) => {
                           </div>
                         <div class="pb-3 mx-auto">
                         
-                        <a href="#" class="btn btn-success">Buy Know</a>
+                        <a href="#" onclick="loadProduct(${product.id})" class="btn btn-success">Buy Know</a>
                         </div>
                       </div>
         `
@@ -87,3 +87,39 @@ const categoryDataLoad=(category) =>{
     clearContainer();
     loadData(category.replace("*","'"))
 }
+
+const loadProduct= async (productId)=>{
+    
+    const url = `https://fakestoreapi.com/products/${productId}`;
+
+    const res = await fetch(url);
+    const data = await res.json();
+    addProductCart(data);
+
+}
+
+const addProductCart =(product) =>{
+    const productCart = document.getElementById('product-cart');
+
+    const tr = document.createElement('tr');
+    tr.innerHTML =`
+    <th scope="row">${product.title}</th>
+              <td><span class='product-price'>${product.price}</span>$</td>
+              </td>
+              <td ><button class="btn text-danger">X</button></td>
+    `;
+    productCart.appendChild(tr);
+    console.log(product)
+  
+}
+
+const updateTotalPrice =() =>{
+    const productsPrice = document.getElementsByClassName('product-price');
+    let totalPrice = 0;
+    for(const product of productsPrice){
+        totalPrice = totalPrice + Number(product.innerText);
+        console.log(product.innerText)
+    }
+    document.getElementById('total-price').innerText = parseFloat(totalPrice.toFixed(2));
+}
+
