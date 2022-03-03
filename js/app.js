@@ -1,5 +1,5 @@
 const loadCatagories = async () => {
-
+    document.getElementById('spinner').classList.add('d-block')
     const url = 'https://fakestoreapi.com/products/categories';
 
     const res = await fetch(url);
@@ -12,17 +12,22 @@ const loadCatagories = async () => {
         
         createCategoryMenu(catagory);
     });
+    
+    document.getElementById('spinner').classList.add('d-none')
 
 }
 loadCatagories();
 
 const loadData =async (catagory) =>{
     
+    document.getElementById('spinner').classList.add('d-block')
     const url = `https://fakestoreapi.com/products/category/${catagory}`;
 
     const res = await fetch(url);
     const data = await res.json();
     displayData(catagory,data);
+    
+    document.getElementById('spinner').classList.add('d-none')
 
 }
 
@@ -58,7 +63,7 @@ const displayData = (catagory,products) => {
                           </div>
                         <div class="pb-3 mx-auto">
                         
-                        <a href="#" onclick="loadProduct(${product.id})" class="btn btn-success">Buy Know</a>
+                        <a href="#" onclick="loadProduct(${product.id})" class="btn btn-success">Buy Now</a>
                         </div>
                       </div>
         `
@@ -90,12 +95,14 @@ const categoryDataLoad=(category) =>{
 
 const loadProduct= async (productId)=>{
     
+    document.getElementById('spinner').classList.add('d-block')
     const url = `https://fakestoreapi.com/products/${productId}`;
 
     const res = await fetch(url);
     const data = await res.json();
     addProductCart(data);
 
+    document.getElementById('spinner').classList.add('d-block')
 }
 
 const addProductCart =(product) =>{
